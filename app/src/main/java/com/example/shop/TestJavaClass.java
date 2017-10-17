@@ -5,4 +5,5 @@ package com.example.shop;
  */
 
 public class TestJavaClass {
+    private String test;
 }
