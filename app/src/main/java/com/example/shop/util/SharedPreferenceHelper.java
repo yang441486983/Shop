@@ -1,9 +1,7 @@
 package com.example.shop.util;
 import android.content.Context;
 import android.content.SharedPreferences;
-/**
- * Created by Mr.yang on 12/7/2016.
- */
+
 
 
 

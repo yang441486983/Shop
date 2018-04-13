@@ -14,9 +14,7 @@ import com.example.shop.model.GoodsViewGroupItem;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by 杨超 on 2017/9/28.
- */
+
 
 public class GoodsViewGroup extends ViewGroup {
 

@@ -26,9 +26,11 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".util.alipay.PayDemoActivity" />
         <activity android:name=".GoodsDetailActivity" />
         <activity android:name=".CartActivity" />
-        <activity android:name=".OrdersActivity"></activity>
+        <activity android:name=".OrdersActivity" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

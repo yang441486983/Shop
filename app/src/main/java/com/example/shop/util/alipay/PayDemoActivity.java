@@ -104,6 +104,7 @@ public class PayDemoActivity extends FragmentActivity {
 		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pay_main);
+		payV2();
 	}
 	
 	/**
@@ -111,7 +112,7 @@ public class PayDemoActivity extends FragmentActivity {
 	 * 
 	 * @param v
 	 */
-	public void payV2(View v) {
+	public void payV2() {
 		if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
 			new AlertDialog.Builder(this).setTitle("警告").setMessage("需要配置APPID | RSA_PRIVATE")
 					.setPositiveButton("确定", new DialogInterface.OnClickListener() {

@@ -5,13 +5,17 @@ package com.example.shop.common;
  */
 
 public class UrlAddress {
-    public static final String loginUrl = "http://192.168.191.1:8080/Frame2/appUser/login";
-    public static final String regUrl = "http://192.168.191.1:8080/Frame2/appUser/reg";
-    public static final String newUrl = "http://192.168.191.1:8080/Frame2/appGoods/getNewGoods";
-    public static final String picUrl =  "http://192.168.191.1:8080/Frame2";
-    public static final String hotSalesUrl = "http://192.168.191.1:8080/Frame2/appGoods/getSalesGoods";
-    public static final String detailsUrl = "http://192.168.191.1:8080/Frame2/appGoods/getGoodsDetailById";
-    public static final String addressUrl = "http://192.168.191.1:8080/Frame2/appAddress/getMyAddress";
-    public static final String addOrderUrl = "http://192.168.191.1:8080/Frame2/appOrder/";
-    public static final String getMyOrdersUrl = "http://192.168.191.1:8080/Frame2/appOrder/getMyOrders";
+    public static final String loginUrl = "http://192.168.253.1:8080/Frame2/appUser/login";
+    public static final String regUrl = "http://192.168.253.1:8080/Frame2/appUser/reg";
+    public static final String newUrl = "http://192.168.253.1:8080/Frame2/appGoods/getNewGoods";
+    public static final String picUrl =  "http://192.168.253.1:8080/Frame2";
+    public static final String hotSalesUrl = "http://192.168.253.1:8080/Frame2/appGoods/getSalesGoods";
+    public static final String detailsUrl = "http://192.168.253.1:8080/Frame2/appGoods/getGoodsDetailById";
+    public static final String addressUrl = "http://192.168.253.1:8080/Frame2/appAddress/getMyAddress";
+    public static final String addOrderUrl = "http://192.168.253.1:8080/Frame2/appOrder/";
+    public static final String getMyOrdersUrl = "http://192.168.253.1.1:8080/Frame2/appOrder/getMyOrders";
+    public static final String searchUrl = "http://192.168.253.1:8080/Frame2/appGoods/searchGoods";
+    public static final String getAdverUrl = "http://192.168.253.1:8080/Frame2/appAdver/getAdver";
+    public static final String getAllCatesUrl = "http://192.168.253.1:8080/Frame2/appCate/getAllCates";
+    public static final String getGoodsByCateUrl = "http://192.168.253.1:8080/Frame2/appGoods/getGoodsByCate";
 }

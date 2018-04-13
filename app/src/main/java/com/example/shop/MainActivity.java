@@ -4,23 +4,49 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.example.shop.Fragment.HomepageFragment;
 import com.example.shop.Fragment.HotSalesFragment;
 import com.example.shop.Fragment.MyFragment;
 import com.example.shop.Fragment.ShoppingFragment;
+import com.example.shop.util.SharedPreferenceHelper;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.shop.common.UrlAddress.picUrl;
+import static com.example.shop.common.UrlAddress.searchUrl;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
     HomepageFragment homepageFragment;
     HotSalesFragment hotSalesFragment;
     MyFragment myFragment;
     ShoppingFragment shoppingFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar)findViewById(R.id.bottomBar);
         bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.homepage,"首页")).
                 addItem(new BottomNavigationItem(R.drawable.kind,"热销")).
@@ -29,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         bottomNavigationBar.setTabSelectedListener(this);
         setDefaultFragment();
     }
+
     private void setDefaultFragment() {
         FragmentManager fragmentManager=getSupportFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
@@ -103,4 +130,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onTabReselected(int position) {
 
     }
+
+
 }

@@ -6,12 +6,20 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,10 +36,12 @@ import com.example.shop.GoodsDetailActivity;
 import com.example.shop.R;
 
 
-import com.example.shop.model.GoodDetail;
+import com.example.shop.SearchActivity;
 import com.example.shop.util.BitmapCache;
 
 import com.example.shop.util.SharedPreferenceHelper;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.yarolegovich.discretescrollview.DiscreteScrollView;
 
 
 import org.json.JSONArray;
@@ -44,24 +54,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shop.common.UrlAddress.getAdverUrl;
 import static com.example.shop.common.UrlAddress.newUrl;
 import static com.example.shop.common.UrlAddress.picUrl;
+import static com.example.shop.common.UrlAddress.searchUrl;
 
 public class HomepageFragment extends Fragment{
-    List<String> nameList,picList,saleList,priceList,discountList,idList,cateIdList,discList,stockList;
+    List<String> nameList,picList,saleList,priceList,discountList,idList,cateIdList,discList,stockList,adverIdList,adverPicList,adverGoodsIdList;
     ListView lv_newGoods;
     RequestQueue queue = null;
+    RequestQueue adverQueue = null;
     NetworkImageView f_goodsImage;
     TextView f_goodsName,f_saleCount,f_goodsPrice,f_goodsDiscount;
     ImageLoader imageLoader;
+    MaterialSearchView searchView;
+    DiscreteScrollView adverScrollView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_homepage,container,false);
-
+        setHasOptionsMenu(true);
         return view;
     }
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queue = Volley.newRequestQueue(getActivity());
+        adverQueue = Volley.newRequestQueue(getActivity());
+        Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        searchView = (MaterialSearchView)getActivity().findViewById(R.id.search_view);
+        lv_newGoods = (ListView)getActivity().findViewById(R.id.newGoodsList);
+        adverScrollView = (DiscreteScrollView)getActivity().findViewById(R.id.adver_scroll);
+        //addHeader();
         idList = new ArrayList<>();
         cateIdList = new ArrayList<>();
         discList = new ArrayList<>();
@@ -71,12 +93,58 @@ public class HomepageFragment extends Fragment{
         saleList = new ArrayList<>();
         priceList = new ArrayList<>();
         discountList = new ArrayList<>();
-        initView();
-
+        adverIdList = new ArrayList<>();
+        adverPicList = new ArrayList<>();
+        adverGoodsIdList = new ArrayList<>();
+        //initView();
+        //lv_newGoods.addHeaderView(adverScrollView);
         imageLoader = new ImageLoader(queue,new BitmapCache());
         getNewGoods();
         itemListener();
+        searchQurey();
+        getAdver();
     }
+    public void searchQurey(){
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(final String query) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra("keyword",query);
+                startActivity(intent);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+            }
+        });
+    }
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
+        menuInflater.inflate(R.menu.menu, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
+    }
+    public void addHeader(){
+        AbsListView.LayoutParams lp = new ListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+        adverScrollView.setLayoutParams(lp);
+        lv_newGoods.addHeaderView(adverScrollView);
+    }
+
     public void itemListener(){
         lv_newGoods.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,6 +155,44 @@ public class HomepageFragment extends Fragment{
                 startActivity(intent);
             }
         });
+    }
+    public void getAdver(){
+        StringRequest adverRequest = new StringRequest(Request.Method.POST, getAdverUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jo = new JSONObject(response);
+                    JSONArray array = jo.getJSONArray("adver");
+                    for (int i = 0;i<array.length();i++){
+                        JSONObject jsonObject = array.getJSONObject(i);
+                        String adverId = jsonObject.getString("adverId");
+                        String adverPicUrl = jsonObject.getString("adverPic");
+                        String adverGoodsId = jsonObject.getString("goodsId");
+                        adverIdList.add(adverId);
+                        adverPicList.add(adverPicUrl);
+                        adverGoodsIdList.add(adverGoodsId);
+                    }
+                    Log.e("adverPicList",adverPicList.toString());
+                    AdverPicAdapter adapter = new AdverPicAdapter(adverPicList);
+                    adverScrollView.setAdapter(adapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> localHashMap = new HashMap<>();
+                String cookie = SharedPreferenceHelper.getCookie(getActivity());
+                localHashMap.put("Cookie", cookie);
+                return localHashMap;
+            }
+        };
+        adverQueue.add(adverRequest);
     }
     public void getNewGoods() {
         StringRequest request = new StringRequest(Request.Method.POST, newUrl, new Response.Listener<String>() {
@@ -148,13 +254,44 @@ public class HomepageFragment extends Fragment{
         };
         queue.add(request);
     }
-    private void initView(){
-        lv_newGoods = (ListView)getActivity().findViewById(R.id.newGoodsList);
-        f_goodsImage = (NetworkImageView)getActivity().findViewById(R.id.goodsImg);
-        f_goodsName = (TextView)getActivity().findViewById(R.id.goodsName);
-        f_saleCount = (TextView)getActivity().findViewById(R.id.saleCount);
-        f_goodsPrice = (TextView)getActivity().findViewById(R.id.price);
-        f_goodsDiscount = (TextView)getActivity().findViewById(R.id.discount);
+//    private void initView(){
+//        f_goodsImage = (NetworkImageView)getActivity().findViewById(R.id.goodsImg);
+//        f_goodsName = (TextView)getActivity().findViewById(R.id.goodsName);
+//        f_saleCount = (TextView)getActivity().findViewById(R.id.saleCount);
+//        f_goodsPrice = (TextView)getActivity().findViewById(R.id.price);
+//        f_goodsDiscount = (TextView)getActivity().findViewById(R.id.discount);
+//    }
+    public class AdverPicAdapter extends RecyclerView.Adapter<AdapterViewHolder>{
+        public List adverData = null;
+        public AdverPicAdapter(List adverData){
+            this.adverData = adverData;
+        }
+
+        @Override
+        public AdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adver_item,parent,false);
+            AdapterViewHolder viewHolder = new AdapterViewHolder(view);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(AdapterViewHolder holder, int position) {
+            holder.imageView.setImageUrl(picUrl+adverData.get(position).toString(),imageLoader);
+            Log.e("ImageUrl",picUrl+adverData.get(position).toString());
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return adverData.size();
+        }
+    }
+    public static class AdapterViewHolder extends RecyclerView.ViewHolder{
+        public NetworkImageView imageView;
+        public AdapterViewHolder(View itemView) {
+            super(itemView);
+            imageView = (NetworkImageView)itemView.findViewById(R.id.adver_img);
+        }
     }
     class MyAdapter extends BaseAdapter{
         @Override

@@ -2,6 +2,8 @@ package com.example.shop.util.alipay;
 
 
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -83,6 +85,7 @@ public class OrderInfoUtil2_0 {
 		keyValues.put("timestamp", "2016-07-29 16:55:53");
 
 		keyValues.put("version", "1.0");
+		Log.e("keyValues",keyValues.toString());
 		
 		return keyValues;
 	}

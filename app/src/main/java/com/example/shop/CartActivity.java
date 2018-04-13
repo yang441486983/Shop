@@ -21,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.shop.util.BitmapCache;
 import com.example.shop.util.SharedPreferenceHelper;
+import com.example.shop.util.alipay.PayDemoActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,7 +89,8 @@ public class CartActivity extends AppCompatActivity {
 
     }
     public void Pay(){
-
+        Intent intent = new Intent(this, PayDemoActivity.class);
+        startActivity(intent);
         finish();
     }
     public void getAddressRg(){

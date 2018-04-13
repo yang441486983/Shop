@@ -45,19 +45,23 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
-            android:layout_weight="1"
             android:id="@+id/login"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:background="#ff9430"
+            android:layout_marginLeft="50dp"
             android:text="登陆" />
 
         <Button
-            android:layout_weight="1"
-            android:text="注册"
+
             android:id="@+id/register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:background="#3dff9430"
+            android:text="注册" />
     </LinearLayout>
 
 

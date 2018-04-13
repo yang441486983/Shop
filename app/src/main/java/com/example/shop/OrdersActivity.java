@@ -2,6 +2,7 @@ package com.example.shop;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,13 +71,19 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
+                    Log.e("response",response);
                     JSONObject jo = new JSONObject(response);
                     JSONObject jsonObject = jo.getJSONObject("orders");
                     JSONArray listArray = jsonObject.getJSONArray("list");
+                    Log.e("listArray",listArray.toString());
                     for (int i = 0;i<listArray.length();i++){
+                        int a = listArray.length();
+                        String string = String.valueOf(a);
+                        Log.e("listArray.length",string);
                         JSONObject object = listArray.getJSONObject(i);
                         String orderId = object.getString("orderId");
                         orderIdList.add(orderId);
+                        Log.e("orderIdList",orderIdList.toString());
                         String orderCode = object.getString("orderCode");
                         orderCodeList.add(orderCode);
                         String userId = object.getString("userId");
@@ -88,8 +95,9 @@ public class OrdersActivity extends AppCompatActivity {
                         String orderDate = object.getString("orderDate");
                         orderDateList.add(orderDate);
                         JSONArray detailsArray = object.getJSONArray("odetails");
-                        for (int j = 0;j<detailsArray.length();j++){
-                            JSONObject detailObject = detailsArray.getJSONObject(i);
+                        JSONObject detailObject = (JSONObject)detailsArray.get(0);
+                        Log.e("detailObject",detailObject.toString());
+
                             String odetailId = detailObject.getString("odetailId");
                             odetailIdList.add(odetailId);
                             String goodsId = detailObject.getString("goodsId");
@@ -106,8 +114,8 @@ public class OrdersActivity extends AppCompatActivity {
                             odetailNumList.add(odetailNum);
                             String odetailPic = picUrl.concat(detailObject.getString("odetailPic"));
                             odetailPicList.add(odetailPic);
-                        }
                     }
+                    Log.e("odetailPicList",odetailPicList.toString());
                     MyAdapter adapter = new MyAdapter();
                     myOrderList.setAdapter(adapter);
                 } catch (JSONException e) {
@@ -120,12 +128,13 @@ public class OrdersActivity extends AppCompatActivity {
 
             }
         }){
+
+            //写入Cookie
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> localHashMap = new HashMap<>();
                 String cookie = SharedPreferenceHelper.getCookie(OrdersActivity.this);
                 localHashMap.put("Cookie", cookie);
-                System.out.println("这是localHashMap"+cookie);
                 return localHashMap;
             }
         };
@@ -167,9 +176,11 @@ public class OrdersActivity extends AppCompatActivity {
             holder.orderCode.setText("订单号:"+orderCodeList.get(i).toString());
             holder.orderDate.setText("订单日期:"+orderDateList.get(i).toString());
             holder.orderListInfo.setText(odetailNameList.get(i).toString()+"    "+odetailSizeList.get(i).toString()+"    "+odetailColorList.get(i).toString());
-            holder.orderPrice.setText(odetailPriceList.get(i).toString());
-            int totalPrice = Integer.parseInt(orderPostalfeeList.get(i).toString())+Integer.parseInt(odetailPriceList.get(i).toString());
-            holder.orderTotalPrice.setText(String.valueOf(totalPrice));
+            holder.orderPrice.setText("商品价格:"+odetailPriceList.get(i).toString()+"元");
+            //FATAL EXCEPTION:main
+            //java.lang.NumberFormatException:For input string:"12.0"
+            double totalPrice = Double.parseDouble(orderPostalfeeList.get(i).toString())+Double.parseDouble(odetailPriceList.get(i).toString());
+            holder.orderTotalPrice.setText("总价:"+String.valueOf(totalPrice)+"元");
             return view;
         }
     }

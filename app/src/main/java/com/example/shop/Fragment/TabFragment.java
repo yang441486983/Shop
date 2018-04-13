@@ -1,18 +1,11 @@
 package com.example.shop.Fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -29,10 +22,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.shop.R;
-import com.example.shop.SearchActivity;
 import com.example.shop.util.BitmapCache;
 import com.example.shop.util.SharedPreferenceHelper;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,29 +34,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.shop.common.UrlAddress.hotSalesUrl;
+import static com.example.shop.common.UrlAddress.getGoodsByCateUrl;
 import static com.example.shop.common.UrlAddress.picUrl;
-import static com.example.shop.common.UrlAddress.searchUrl;
 
-public class HotSalesFragment extends Fragment {
-    List<String> nameList,picList,saleList,priceList,discountList,idList,cateIdList,discList,stockList;
-    ListView lv_salesGoods;
-    RequestQueue queue = null;
+
+public class TabFragment extends Fragment{
+    ListView kindList;
     NetworkImageView f_goodsImage;
-    TextView f_goodsName,f_saleCount,f_goodsPrice,f_goodsDiscount;
+    TextView textView;
+    List<String> nameList,picList,saleList,priceList,discountList,idList,cateIdList,discList,stockList;
+    RequestQueue queue = null;
     ImageLoader imageLoader;
-    MaterialSearchView searchView;
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.fragment_kinds,container,false);
-        setHasOptionsMenu(true);
-        return view;
-    }
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    TextView f_goodsName,f_saleCount,f_goodsPrice,f_goodsDiscount;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.tab_fragment,container,false);
         queue = Volley.newRequestQueue(getActivity());
-        Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.hotToolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        searchView = (MaterialSearchView)getActivity().findViewById(R.id.hot_search_view);
+        kindList = (ListView)view.findViewById(R.id.kind_list);
         idList = new ArrayList<>();
         cateIdList = new ArrayList<>();
         discList = new ArrayList<>();
@@ -75,54 +61,33 @@ public class HotSalesFragment extends Fragment {
         saleList = new ArrayList<>();
         priceList = new ArrayList<>();
         discountList = new ArrayList<>();
-        initView();
         imageLoader = new ImageLoader(queue,new BitmapCache());
-        getHotSalesGoods();
-        searchQurey();
+        initView(view);
+        return view;
     }
-    public void searchQurey(){
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(final String query) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
-                intent.putExtra("keyword",query);
-                startActivity(intent);
 
-                return false;
-            }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-
-            }
-        });
+        //getGoodsByCate();
     }
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
-        menuInflater.inflate(R.menu.menu, menu);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
+    public TabFragment(){
 
     }
-    public void getHotSalesGoods() {
-        StringRequest request = new StringRequest(Request.Method.POST, hotSalesUrl, new Response.Listener<String>() {
+    private void initView(View view){
+
+        final String cateId = (String)getArguments().get("kindId");
+        Log.e("这是cateId",cateId);
+        StringRequest request = new StringRequest(Request.Method.POST, getGoodsByCateUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.e("这是response",response);
                 try {
 
                     JSONObject jo = new JSONObject(response);
-                    JSONArray array = jo.getJSONArray("salesGoods");
+                    JSONObject goods  = jo.getJSONObject("goods");
+                    JSONArray array = goods.getJSONArray("list");
                     Log.e("arry",array.toString());
                     //System.out.println(array);
                     for (int i = 0;i<array.length();i++){
@@ -136,6 +101,7 @@ public class HotSalesFragment extends Fragment {
                         String stock = jsonObject.getString("goodsStock");
                         String pic = picUrl.concat(jsonObject.getString("goodsPic"));
                         String sales = jsonObject.getString("goodsSales");
+                        Log.e("goodsName",name);
                         idList.add(id);
                         cateIdList.add(cate_id);
                         nameList.add(name);
@@ -145,16 +111,13 @@ public class HotSalesFragment extends Fragment {
                         stockList.add(stock);
                         picList.add(pic);
                         saleList.add(sales);
-
                     }
-                    Log.e("hot",picList.toString());
-//                    Log.e("map",map.toString());
+                    Log.e("这是salesList",saleList.toString());
                     MyAdapter adapter = new MyAdapter();
-                    lv_salesGoods.setAdapter(adapter);
+                    kindList.setAdapter(adapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
             }
         }, new Response.ErrorListener() {
@@ -162,7 +125,12 @@ public class HotSalesFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
 
             }
-        }) {
+        }){//提交参数
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("cateId",cateId);
+                return map;
+            }
 
             //写入Cookie
             @Override
@@ -174,14 +142,6 @@ public class HotSalesFragment extends Fragment {
             }
         };
         queue.add(request);
-    }
-    private void initView(){
-        lv_salesGoods = (ListView)getActivity().findViewById(R.id.hotSalesList);
-//        f_goodsImage = (NetworkImageView)getActivity().findViewById(R.id.goodsImg);
-//        f_goodsName = (TextView)getActivity().findViewById(R.id.goodsName);
-//        f_saleCount = (TextView)getActivity().findViewById(R.id.saleCount);
-//        f_goodsPrice = (TextView)getActivity().findViewById(R.id.price);
-//        f_goodsDiscount = (TextView)getActivity().findViewById(R.id.discount);
     }
     class MyAdapter extends BaseAdapter {
         @Override
@@ -203,7 +163,7 @@ public class HotSalesFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
             ViewHolder holder = new ViewHolder();
             if (view == null){
-                view = LayoutInflater.from(getActivity()).inflate(R.layout.hot_sales_item,null);
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.kind_layout,null);
                 holder.name = (TextView)view.findViewById(R.id.goodsName);
                 holder.sale = (TextView)view.findViewById(R.id.saleCount);
                 holder.price = (TextView)view.findViewById(R.id.price);
