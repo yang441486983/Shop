@@ -1,11 +1,108 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context="com.example.shop.Fragment.HomepageFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <me.codego.view.DotLayout
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/unPay"
+                app:dotOverPadding="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/money"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </me.codego.view.DotLayout>
+            <TextView
+                android:text="待付款"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <me.codego.view.DotLayout
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/unShipped"
+                app:dotOverPadding="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/money"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </me.codego.view.DotLayout>
+            <TextView
+                android:text="待发货"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <me.codego.view.DotLayout
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/unCollected"
+                app:dotOverPadding="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/money"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </me.codego.view.DotLayout>
+            <TextView
+                android:text="待收货"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <me.codego.view.DotLayout
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/unComment"
+                app:dotOverPadding="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/money"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </me.codego.view.DotLayout>
+            <TextView
+                android:text="待评论"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
+    </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -16,4 +113,4 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

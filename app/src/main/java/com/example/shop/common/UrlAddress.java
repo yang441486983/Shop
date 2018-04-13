@@ -18,4 +18,5 @@ public class UrlAddress {
     public static final String getAdverUrl = "http://192.168.253.1:8080/Frame2/appAdver/getAdver";
     public static final String getAllCatesUrl = "http://192.168.253.1:8080/Frame2/appCate/getAllCates";
     public static final String getGoodsByCateUrl = "http://192.168.253.1:8080/Frame2/appGoods/getGoodsByCate";
+    public static final String getMyListOrdersUrl = "http://192.168.253.1.1:8080/Frame2/appOrder/getMyListOrders";
 }
