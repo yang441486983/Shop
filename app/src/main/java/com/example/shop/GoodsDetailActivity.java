@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shop.common.UrlAddress.addCartUrl;
 import static com.example.shop.common.UrlAddress.detailsUrl;
 import static com.example.shop.common.UrlAddress.picUrl;
 
@@ -48,10 +49,10 @@ public class GoodsDetailActivity extends AppCompatActivity{
     TextView gDetail,gPrice,gDiscount,gSale;
     String goodsId;
     RequestQueue queue = null;
-    String wannaColorId,wannaSizeId,wannaColor,wannaSize,wannaNum,wannaGoodsName,pic;
+    String wannaColorId,wannaSizeId,wannaColor,wannaSize,wannaNum,wannaGoodsName,pic,wannaPrice;
     DiscreteScrollView scrollView;
     List img,colors,sizes,colorsId,sizesId;
-    Button buy,close,confirm;
+    Button buy,close,confirm,addCart;
     PopupWindow popupWindow;
     ImageLoader imageLoader;
     com.travijuu.numberpicker.library.NumberPicker picker;
@@ -99,6 +100,52 @@ public class GoodsDetailActivity extends AppCompatActivity{
                 wannaColor = value;
             }
         });
+        picker = (com.travijuu.numberpicker.library.NumberPicker) view.findViewById(R.id.numPicker);
+        picker.setMin(0);
+        picker.setMax(1000);
+        addCart = (Button)view.findViewById(R.id.add_cart);
+        addCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StringRequest request = new StringRequest(Request.Method.POST, addCartUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        popupWindow.dismiss();
+                        Log.e("添加成功","");
+                        Toast.makeText(GoodsDetailActivity.this,"添加购物车成功",Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }){
+                    //提交参数
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> map = new HashMap<>();
+                        wannaNum = String.valueOf(picker.getValue());
+                        map.put("goodsId",goodsId);
+                        map.put("cartName",wannaGoodsName);
+                        map.put("cartSize",wannaSize);
+                        map.put("cartColor",wannaColor);
+                        map.put("cartPrice",wannaPrice);
+                        map.put("cartNum",wannaNum);
+                        map.put("cartPic",pic.replace("http://192.168.253.1:8080/Frame2",""));
+                        Log.e("map",map.toString());
+                        return map;
+                    }
+                    //写入Cookie
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> localHashMap = new HashMap<>();
+                        String cookie = SharedPreferenceHelper.getCookie(GoodsDetailActivity.this);
+                        localHashMap.put("Cookie", cookie);
+                        return localHashMap;
+                    }
+                };
+                queue.add(request);
+            }
+        });
         confirm = (Button)view.findViewById(R.id.confirm);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,9 +165,6 @@ public class GoodsDetailActivity extends AppCompatActivity{
             }
         });
         close = (Button)view.findViewById(R.id.close);
-        picker = (com.travijuu.numberpicker.library.NumberPicker) view.findViewById(R.id.numPicker);
-        picker.setMin(0);
-        picker.setMax(1000);
         popupWindow.setContentView(view);
         View rootView = LayoutInflater.from(GoodsDetailActivity.this).inflate(R.layout.activity_goods_detail,null);
         popupWindow.showAtLocation(rootView, Gravity.BOTTOM,0,0);
@@ -152,9 +196,6 @@ public class GoodsDetailActivity extends AppCompatActivity{
         return items;
     }
 
-    public void AddCart(){
-
-    }
     public void initView(){
         scrollView = (DiscreteScrollView)findViewById(R.id.scroll);
         img = new ArrayList();
@@ -186,6 +227,7 @@ public class GoodsDetailActivity extends AppCompatActivity{
                     System.out.println("ccc"+name);
                     String disc = jsonObject.getString("goodsDisc");
                     String price = jsonObject.getString("goodsPrice");
+                    wannaPrice = price;
                     String discount = jsonObject.getString("goodsDiscount");
                     String stock = jsonObject.getString("goodsStock");
                     String sales = jsonObject.getString("goodsSales");

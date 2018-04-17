@@ -1,5 +1,6 @@
 package com.example.shop;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,10 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shop.common.UrlAddress.getMyListOrdersUrl;
 import static com.example.shop.common.UrlAddress.getMyOrdersUrl;
 import static com.example.shop.common.UrlAddress.picUrl;
 
 public class OrdersActivity extends AppCompatActivity {
+    String status;
     ListView myOrderList;
     ImageLoader imageLoader;
     List orderIdList,orderCodeList,userIdList,orderStatusList,orderPostalfeeList,orderDateList,odetailIdList
@@ -44,9 +47,11 @@ public class OrdersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
+        Intent intent = getIntent();
+        status = intent.getStringExtra("status");
         queue = Volley.newRequestQueue(OrdersActivity.this);
         initView();
-        getAllOrders();
+        getOrders();
     }
     public void initView(){
         imageLoader = new ImageLoader(queue,new BitmapCache());
@@ -66,15 +71,14 @@ public class OrdersActivity extends AppCompatActivity {
         odetailNumList = new ArrayList();
         odetailPicList = new ArrayList();
     }
-    public void getAllOrders(){
-        StringRequest request = new StringRequest(Request.Method.POST, getMyOrdersUrl, new Response.Listener<String>() {
+    public void getOrders(){
+        StringRequest request = new StringRequest(Request.Method.POST, getMyListOrdersUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Log.e("response",response);
                     JSONObject jo = new JSONObject(response);
-                    JSONObject jsonObject = jo.getJSONObject("orders");
-                    JSONArray listArray = jsonObject.getJSONArray("list");
+                    JSONArray listArray = jo.getJSONArray("orders");
                     Log.e("listArray",listArray.toString());
                     for (int i = 0;i<listArray.length();i++){
                         int a = listArray.length();
@@ -128,7 +132,17 @@ public class OrdersActivity extends AppCompatActivity {
 
             }
         }){
+            //提交参数
+            protected Map<String, String> getParams() throws AuthFailureError {
+                if (status != ""){
+                    Map<String, String> map = new HashMap<>();
+                    map.put("status",status);
+                    Log.e("这是参数",map.toString());
+                    return map;
+                }else
+                    return null;
 
+            }
             //写入Cookie
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {

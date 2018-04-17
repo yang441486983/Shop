@@ -13,10 +13,14 @@ public class UrlAddress {
     public static final String detailsUrl = "http://192.168.253.1:8080/Frame2/appGoods/getGoodsDetailById";
     public static final String addressUrl = "http://192.168.253.1:8080/Frame2/appAddress/getMyAddress";
     public static final String addOrderUrl = "http://192.168.253.1:8080/Frame2/appOrder/";
-    public static final String getMyOrdersUrl = "http://192.168.253.1.1:8080/Frame2/appOrder/getMyOrders";
+    public static final String getMyOrdersUrl = "http://192.168.253.1:8080/Frame2/appOrder/getMyOrders";
     public static final String searchUrl = "http://192.168.253.1:8080/Frame2/appGoods/searchGoods";
     public static final String getAdverUrl = "http://192.168.253.1:8080/Frame2/appAdver/getAdver";
     public static final String getAllCatesUrl = "http://192.168.253.1:8080/Frame2/appCate/getAllCates";
     public static final String getGoodsByCateUrl = "http://192.168.253.1:8080/Frame2/appGoods/getGoodsByCate";
-    public static final String getMyListOrdersUrl = "http://192.168.253.1.1:8080/Frame2/appOrder/getMyListOrders";
+    public static final String getMyListOrdersUrl = "http://192.168.253.1:8080/Frame2/appOrder/getMyListOrders";
+    public static final String setDefaultAddressUrl = "http://192.168.253.1:8080/Frame2/appAddress/setDefaultAddress";
+    public static final String handleAddressUrl = "http://192.168.253.1:8080/Frame2/appAddress/handleAddress";
+    public static final String delAddressUrl = "http://192.168.253.1:8080/Frame2/appAddress/delAddress";
+    public static final String addCartUrl = "http://192.168.253.1:8080/Frame2/appCart/addCart";
 }

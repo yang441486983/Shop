@@ -9,7 +9,13 @@
     tools:context="com.example.shop.Fragment.HomepageFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:text="我的订单"
+        android:textSize="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -64,7 +70,7 @@
             android:layout_height="wrap_content">
             <me.codego.view.DotLayout
                 android:layout_gravity="center_horizontal"
-                android:id="@+id/unCollected"
+                android:id="@+id/unReceived"
                 app:dotOverPadding="0dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -86,7 +92,7 @@
             android:layout_height="wrap_content">
             <me.codego.view.DotLayout
                 android:layout_gravity="center_horizontal"
-                android:id="@+id/unComment"
+                android:id="@+id/all"
                 app:dotOverPadding="0dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -96,7 +102,7 @@
                     android:layout_height="50dp" />
             </me.codego.view.DotLayout>
             <TextView
-                android:text="待评论"
+                android:text="全部订单"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -104,12 +110,21 @@
 
     </LinearLayout>
     <LinearLayout
-        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:id="@+id/myOrders"
-            android:text="我的订单"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_weight="1"
+            android:text="我的地址"
+            android:textSize="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:clickable="true"
+            android:id="@+id/address_manage"
+            android:text="管理我的地址->"
+            android:textSize="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -79,16 +79,9 @@
         android:layout_height="wrap_content"
 
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/addCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="加入购物车" />
-
         <Button
             android:id="@+id/buy"
+            android:background="#e43333"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
