@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,126 +48,92 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shop.common.UrlAddress.getAllCatesUrl;
+import static com.example.shop.common.UrlAddress.getGoodsByCateUrl;
 import static com.example.shop.common.UrlAddress.hotSalesUrl;
 import static com.example.shop.common.UrlAddress.picUrl;
 import static com.example.shop.common.UrlAddress.searchUrl;
 
 public class HotSalesFragment extends Fragment {
-    List<String> nameList,picList,saleList,priceList,discountList,idList,cateIdList,discList,stockList;
-    ListView lv_salesGoods;
     RequestQueue queue = null;
-    NetworkImageView f_goodsImage;
-    TextView f_goodsName,f_saleCount,f_goodsPrice,f_goodsDiscount;
-    ImageLoader imageLoader;
-    MaterialSearchView searchView;
+    List<String> tabId,tabName;
+    TabLayout kindTab;
+    ViewPager kindPager;
+    kindAdapter adapter;
+    int cateId;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_kinds,container,false);
+
         setHasOptionsMenu(true);
         return view;
     }
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         queue = Volley.newRequestQueue(getActivity());
-        Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.hotToolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        searchView = (MaterialSearchView)getActivity().findViewById(R.id.hot_search_view);
-        idList = new ArrayList<>();
-        cateIdList = new ArrayList<>();
-        discList = new ArrayList<>();
-        stockList = new ArrayList<>();
-        nameList = new ArrayList<>();
-        picList = new ArrayList<>();
-        saleList = new ArrayList<>();
-        priceList = new ArrayList<>();
-        discountList = new ArrayList<>();
-        initView();
-        imageLoader = new ImageLoader(queue,new BitmapCache());
-        getHotSalesGoods();
-        searchQurey();
+        tabId = new ArrayList<>();
+        tabName = new ArrayList<>();
+        getAllCates();
+
     }
-    public void searchQurey(){
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+    public void init() {
+        kindPager = (ViewPager)getActivity().findViewById(R.id.kind_pager);
+        kindTab = (TabLayout)getActivity().findViewById(R.id.kind_tab);
+        adapter = new kindAdapter(getFragmentManager());
+        Log.e("测试",tabName.toString());
+        for (int i = 0;i<tabName.size();i++){
+            kindTab.addTab(kindTab.newTab().setText(tabName.get(i).toString()));
+            Log.e("导航栏",tabName.get(i));
+        }
+        kindPager.setAdapter(adapter);
+        kindTab.setupWithViewPager(kindPager);
+        for (int i = 0;i<tabName.size();i++){
+            kindTab.getTabAt(i).setText(tabName.get(i));
+        }
+        kindTab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public boolean onQueryTextSubmit(final String query) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
-                intent.putExtra("keyword",query);
-                startActivity(intent);
-
-                return false;
+            public void onTabSelected(TabLayout.Tab tab) {
+                kindPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
+            public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
             @Override
-            public void onSearchViewClosed() {
+            public void onTabReselected(TabLayout.Tab tab) {
 
             }
         });
-    }
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
-        menuInflater.inflate(R.menu.menu, menu);
 
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
 
     }
-    public void getHotSalesGoods() {
-        StringRequest request = new StringRequest(Request.Method.POST, hotSalesUrl, new Response.Listener<String>() {
+    public void getAllCates(){
+        StringRequest request = new StringRequest(Request.Method.POST, getAllCatesUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.e("tab",response);
                 try {
-
                     JSONObject jo = new JSONObject(response);
-                    JSONArray array = jo.getJSONArray("salesGoods");
-                    Log.e("arry",array.toString());
-                    //System.out.println(array);
-                    for (int i = 0;i<array.length();i++){
-                        JSONObject jsonObject = array.getJSONObject(i);
-                        String id = jsonObject.getString("goodsId");
-                        String cate_id = jsonObject.getString("cateId");
-                        String name = jsonObject.getString("goodsName");
-                        String disc = jsonObject.getString("goodsDisc");
-                        String price = jsonObject.getString("goodsPrice");
-                        String discount = jsonObject.getString("goodsDiscount");
-                        String stock = jsonObject.getString("goodsStock");
-                        String pic = picUrl.concat(jsonObject.getString("goodsPic"));
-                        String sales = jsonObject.getString("goodsSales");
-                        idList.add(id);
-                        cateIdList.add(cate_id);
-                        nameList.add(name);
-                        discList.add(disc);
-                        priceList.add(price);
-                        discountList.add(discount);
-                        stockList.add(stock);
-                        picList.add(pic);
-                        saleList.add(sales);
-
+                    JSONArray catesArray = jo.getJSONArray("cates");
+                    for (int i = 0;i<catesArray.length();i++){
+                        JSONObject jsonObject = catesArray.getJSONObject(i);
+                        String id = jsonObject.getString("cateId");
+                        String name = jsonObject.getString("cateName");
+                        tabId.add(id);
+                        tabName.add(name);
                     }
-                    Log.e("hot",picList.toString());
-//                    Log.e("map",map.toString());
-                    MyAdapter adapter = new MyAdapter();
-                    lv_salesGoods.setAdapter(adapter);
+                    init();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
             }
-        }) {
+        }){
 
             //写入Cookie
             @Override
@@ -175,57 +146,54 @@ public class HotSalesFragment extends Fragment {
         };
         queue.add(request);
     }
-    private void initView(){
-        lv_salesGoods = (ListView)getActivity().findViewById(R.id.hotSalesList);
-//        f_goodsImage = (NetworkImageView)getActivity().findViewById(R.id.goodsImg);
-//        f_goodsName = (TextView)getActivity().findViewById(R.id.goodsName);
-//        f_saleCount = (TextView)getActivity().findViewById(R.id.saleCount);
-//        f_goodsPrice = (TextView)getActivity().findViewById(R.id.price);
-//        f_goodsDiscount = (TextView)getActivity().findViewById(R.id.discount);
+    public void getGoodsByCate(){
+        StringRequest request = new StringRequest(Request.Method.POST, getGoodsByCateUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){//提交参数
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("cateId",String.valueOf(cateId));
+                return map;
+            }
+
+            //写入Cookie
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> localHashMap = new HashMap<>();
+                String cookie = SharedPreferenceHelper.getCookie(getActivity());
+                localHashMap.put("Cookie", cookie);
+                return localHashMap;
+            }
+        };
     }
-    class MyAdapter extends BaseAdapter {
+    class kindAdapter extends FragmentPagerAdapter {
+
+        public kindAdapter(FragmentManager fm) {
+            super(fm);
+
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment = new TabFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("kindId",tabId.get(position));
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+
         @Override
         public int getCount() {
-            return nameList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return nameList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHolder holder = new ViewHolder();
-            if (view == null){
-                view = LayoutInflater.from(getActivity()).inflate(R.layout.hot_sales_item,null);
-                holder.name = (TextView)view.findViewById(R.id.goodsName);
-                holder.sale = (TextView)view.findViewById(R.id.saleCount);
-                holder.price = (TextView)view.findViewById(R.id.price);
-                holder.discount = (TextView)view.findViewById(R.id.discount);
-                holder.image = (NetworkImageView) view.findViewById(R.id.goodsImg);
-                view.setTag(holder);
-            }else {
-                holder = (ViewHolder)view.getTag();
-            }
-            holder.name.setText(nameList.get(i).toString());
-            holder.sale.setText("共销售:"+saleList.get(i).toString()+"件");
-            holder.price.setText(priceList.get(i).toString()+"元");
-            holder.discount.setText(discountList.get(i).toString()+"元");
-            holder.image.setImageUrl(picList.get(i).toString(),imageLoader);
-            return view;
+            return tabId.size();
         }
     }
-    class ViewHolder{
-        public TextView name;
-        public TextView sale;
-        public TextView price;
-        public TextView discount;
-        public NetworkImageView image;
-    }
+
 }

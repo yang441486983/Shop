@@ -50,6 +50,7 @@ public class GoodsDetailActivity extends AppCompatActivity{
     String goodsId;
     RequestQueue queue = null;
     String wannaColorId,wannaSizeId,wannaColor,wannaSize,wannaNum,wannaGoodsName,pic,wannaPrice;
+    ArrayList<String> wannaColorList,wannaSizeList,wannaGoodsNameList,wannaPicList,wannaPriceList,wannaNumList,wannaGoodsIdList;
     DiscreteScrollView scrollView;
     List img,colors,sizes,colorsId,sizesId;
     Button buy,close,confirm,addCart;
@@ -151,15 +152,21 @@ public class GoodsDetailActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 wannaNum = String.valueOf(picker.getValue());
+                wannaColorList.add(wannaColor);
+                wannaSizeList.add(wannaSize);
+                wannaGoodsIdList.add(goodsId);
+                wannaGoodsNameList.add(wannaGoodsName);
+                wannaPicList.add(pic);
+                wannaPriceList.add(wannaPrice);
+                wannaNumList.add(wannaNum);
                 Intent intent = new Intent(GoodsDetailActivity.this,CartActivity.class);
-                intent.putExtra("wannaColorId",wannaColorId)
-                        .putExtra("wannaSizeId",wannaSizeId)
-                        .putExtra("goodsId",goodsId)
-                        .putExtra("wannaColor",wannaColor)
-                        .putExtra("wannaSize",wannaSize)
-                        .putExtra("wannaNum",wannaNum)
-                        .putExtra("wannaGoodsName",wannaGoodsName)
-                        .putExtra("pic",pic);
+                intent.putStringArrayListExtra("goodsId",wannaGoodsIdList)
+                        .putStringArrayListExtra("wannaColor",wannaColorList)
+                        .putStringArrayListExtra("wannaSize",wannaSizeList)
+                        .putStringArrayListExtra("wannaNum",wannaNumList)
+                        .putStringArrayListExtra("wannaGoodsName",wannaGoodsNameList)
+                        .putStringArrayListExtra("price",wannaPriceList)
+                        .putStringArrayListExtra("pic",wannaPicList);
                 startActivity(intent);
                 popupWindow.dismiss();
             }
@@ -198,6 +205,13 @@ public class GoodsDetailActivity extends AppCompatActivity{
 
     public void initView(){
         scrollView = (DiscreteScrollView)findViewById(R.id.scroll);
+        wannaColorList = new ArrayList<>();
+        wannaGoodsIdList = new ArrayList<>();
+        wannaGoodsNameList = new ArrayList<>();
+        wannaNumList = new ArrayList<>();
+        wannaPicList = new ArrayList<>();
+        wannaPriceList = new ArrayList<>();
+        wannaSizeList = new ArrayList<>();
         img = new ArrayList();
         colors = new ArrayList();
         sizes = new ArrayList();

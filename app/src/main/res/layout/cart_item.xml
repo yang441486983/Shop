@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+    <CheckBox
+        android:layout_gravity="center_vertical"
+        android:id="@+id/add_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/cart_pic"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/cart_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/cart_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/cart_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+    <com.travijuu.numberpicker.library.NumberPicker
+        android:id="@+id/cart_num"
+        android:layout_gravity="center_vertical"
+        app:min="1"
+        app:max="100"
+        app:unit="1"
+        android:focusable="false"
+        android:layout_width="130dp"
+        android:layout_height="40dp">
+    </com.travijuu.numberpicker.library.NumberPicker>
+</LinearLayout>

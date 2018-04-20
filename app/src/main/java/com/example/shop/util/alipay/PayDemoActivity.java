@@ -18,6 +18,7 @@ import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.shop.R;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +37,8 @@ public class PayDemoActivity extends FragmentActivity {
 	public static final String PID = "2088102174810390";
 	/** 支付宝账户登录授权业务：入参target_id值 */
 	public static final String TARGET_ID = "TEST";
+	public String totalPrice,totalNum;
+	public List<String> priceList,numList;
 
 	/** 商户私钥，pkcs8格式 */
 	/** 如下私钥，RSA2_PRIVATE 或者 RSA_PRIVATE 只需要填入一个 */
@@ -104,12 +107,15 @@ public class PayDemoActivity extends FragmentActivity {
 		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pay_main);
+		Intent intent = new Intent();
+		totalPrice = intent.getStringExtra("totalPrice");
+		totalNum = intent.getStringExtra("totalNum");
 		payV2();
 	}
 	
 	/**
 	 * 支付宝支付业务
-	 * 
+	 *
 	 * @param v
 	 */
 	public void payV2() {
@@ -132,7 +138,7 @@ public class PayDemoActivity extends FragmentActivity {
 		 * orderInfo的获取必须来自服务端；
 		 */
         boolean rsa2 = (RSA2_PRIVATE.length() > 0);
-		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2);
+		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2,totalPrice,totalNum);
 		String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 
 		String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;

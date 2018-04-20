@@ -2,33 +2,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.example.shop.Fragment.HomepageFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <FrameLayout
-        android:id="@+id/toolbar_container"
+
+    <android.support.design.widget.TabLayout
+        android:fitsSystemWindows="true"
+        android:id="@+id/kind_tab"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="65dp"
+        app:tabGravity="center"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/colorPrimaryDark"
+        app:tabTextColor="@color/colorPrimary">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/hotToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#2698ec" />
+    </android.support.design.widget.TabLayout>
 
-        <com.miguelcatalan.materialsearchview.MaterialSearchView
-            android:id="@+id/hot_search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
-    <ListView
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:id="@+id/hotSalesList"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/kind_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ListView>
+    </android.support.v4.view.ViewPager>
 
 </LinearLayout>

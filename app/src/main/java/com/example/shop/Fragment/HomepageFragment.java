@@ -35,7 +35,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.shop.GoodsDetailActivity;
 import com.example.shop.R;
 
-
 import com.example.shop.SearchActivity;
 import com.example.shop.util.BitmapCache;
 
@@ -70,7 +69,6 @@ public class HomepageFragment extends Fragment{
     MaterialSearchView searchView;
     DiscreteScrollView adverScrollView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-
         View view = inflater.inflate(R.layout.fragment_homepage,container,false);
         setHasOptionsMenu(true);
 
@@ -78,6 +76,7 @@ public class HomepageFragment extends Fragment{
     }
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         queue = Volley.newRequestQueue(getActivity());
         adverQueue = Volley.newRequestQueue(getActivity());
         Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);

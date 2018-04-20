@@ -6,36 +6,72 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.shop.CartActivity">
-    <LinearLayout
-        android:orientation="horizontal"
+    <android.support.v7.widget.Toolbar
+        android:fitsSystemWindows="true"
+        android:id="@+id/confirm_pay"
+        android:background="@drawable/frame_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/orderImg"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
+        android:layout_height="70dp">
 
-            <TextView
-                android:id="@+id/orderInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="10dp"
+        android:text="请选择地址:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        style="@style/common_horizontal_division_line_style"
+        android:layout_marginBottom="5dp">
+
     </LinearLayout>
     <RadioGroup
+
         android:id="@+id/addressGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </RadioGroup>
-    <info.hoang8f.widget.FButton
-        android:text="支付"
-        android:id="@+id/pay"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        style="@style/common_horizontal_division_line_style"
+        android:layout_marginTop="5dp">
+
+    </LinearLayout>
+    <ListView
+        android:layout_weight="1"
+        android:id="@+id/commit_list"
+        android:divider="#ffffff"
+        android:dividerHeight="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+    <LinearLayout
+        android:background="@drawable/frame_item"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/number_price"
+            android:gravity="right"
+            android:text="共1件，10元"
+            android:textColor="#fb2222"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="提交订单"
+            android:id="@+id/pay"
+            android:textColor="#ffffff"
+            android:background="#fb2222"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </LinearLayout>
