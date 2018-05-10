@@ -13,5 +13,9 @@
         <attr name="horPadding" format="dimension" />
         <attr name="verPadding" format="dimension" />
     </declare-styleable>
-
+    <declare-styleable name="RoundImageView">
+        <attr name="border_thickness" format="dimension" />
+        <attr name="border_inside_color" format="color" />
+        <attr name="border_outside_color" format="color" />
+    </declare-styleable>
 </resources>

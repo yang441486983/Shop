@@ -110,6 +110,7 @@ public class PayDemoActivity extends FragmentActivity {
 		Intent intent = new Intent();
 		totalPrice = intent.getStringExtra("totalPrice");
 		totalNum = intent.getStringExtra("totalNum");
+		Log.e("totalPrice",totalPrice);
 		payV2();
 	}
 	
@@ -138,7 +139,7 @@ public class PayDemoActivity extends FragmentActivity {
 		 * orderInfo的获取必须来自服务端；
 		 */
         boolean rsa2 = (RSA2_PRIVATE.length() > 0);
-		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2,totalPrice,totalNum);
+		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2,"100","1");
 		String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 
 		String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;

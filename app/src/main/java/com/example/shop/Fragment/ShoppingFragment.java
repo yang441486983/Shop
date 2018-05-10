@@ -110,6 +110,15 @@ public class ShoppingFragment extends Fragment {
                         PayCart();
                     }
                 }
+                Intent intent = new Intent(getActivity(), CartActivity.class);
+                intent.putStringArrayListExtra("wannaColor",wannaColorList)
+                        .putStringArrayListExtra("goodsId",wannaGoodsIdList)
+                        .putStringArrayListExtra("wannaSize",wannaSizeList)
+                        .putStringArrayListExtra("wannaNum",wannaNumList)
+                        .putStringArrayListExtra("wannaGoodsName",wannaGoodsNameList)
+                        .putStringArrayListExtra("price",wannaPriceList)
+                        .putStringArrayListExtra("pic",wannaPicList);
+                startActivity(intent);
             }
         });
     }
@@ -161,15 +170,6 @@ public class ShoppingFragment extends Fragment {
                 wannaColorList.add(cartColorList.get(i));
             }
         }
-        Intent intent = new Intent(getActivity(), CartActivity.class);
-        intent.putStringArrayListExtra("wannaColor",wannaColorList)
-                .putStringArrayListExtra("goodsId",wannaGoodsIdList)
-                .putStringArrayListExtra("wannaSize",wannaSizeList)
-                .putStringArrayListExtra("wannaNum",wannaNumList)
-                .putStringArrayListExtra("wannaGoodsName",wannaGoodsNameList)
-                .putStringArrayListExtra("price",wannaPriceList)
-                .putStringArrayListExtra("pic",wannaPicList);
-        startActivity(intent);
 
     }
     public void getTotalPrice(){

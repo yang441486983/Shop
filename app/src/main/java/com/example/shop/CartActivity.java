@@ -155,10 +155,6 @@ public class CartActivity extends AppCompatActivity {
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CartActivity.this, PayDemoActivity.class);
-                intent.putExtra("totalPrice",totalPrice)
-                        .putExtra("totalNum",totalNum);
-                Log.e("show",postalfeeList.toString());
                 for (int n = 0;n<postalfeeList.size();n++){
                     totalPostPrice = totalPostPrice + Float.valueOf(postalfeeList.get(n));
                 }
@@ -173,7 +169,13 @@ public class CartActivity extends AppCompatActivity {
                 String commitPic = gson.toJson(wannaPicList);
                 String commitPrice = gson.toJson(wannaPriceList);
                 addOrder(address,String.valueOf(totalPostPrice),commitGoodsId,commitGoodsName,commitPrice,commitSize,commitColor,commitNum,commitPic);
-                //startActivity(intent);
+                Log.e("totalPrice",String.valueOf(totalPrice));
+                Intent intent = new Intent(CartActivity.this, PayDemoActivity.class);
+                intent.putExtra("totalPrice",String.valueOf(totalPrice))
+                        .putExtra("totalNum",String.valueOf(totalNum));
+                startActivity(intent);
+                Log.e("show",postalfeeList.toString());
+
             }
         });
     }

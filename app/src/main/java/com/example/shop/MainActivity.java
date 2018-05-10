@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar)findViewById(R.id.bottomBar);
         bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.homepage,"首页")).
-                addItem(new BottomNavigationItem(R.drawable.kind,"热销")).
+                addItem(new BottomNavigationItem(R.drawable.kind,"分类")).
                 addItem(new BottomNavigationItem(R.drawable.shoppingcart,"购物车")).
                 addItem(new BottomNavigationItem(R.drawable.my,"我的")).initialise();
         bottomNavigationBar.setTabSelectedListener(this);
