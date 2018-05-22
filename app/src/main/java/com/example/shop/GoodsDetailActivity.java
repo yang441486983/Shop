@@ -114,6 +114,7 @@ public class GoodsDetailActivity extends AppCompatActivity{
                         popupWindow.dismiss();
                         Log.e("添加成功","");
                         Toast.makeText(GoodsDetailActivity.this,"添加购物车成功",Toast.LENGTH_SHORT).show();
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -131,7 +132,7 @@ public class GoodsDetailActivity extends AppCompatActivity{
                         map.put("cartColor",wannaColor);
                         map.put("cartPrice",wannaPrice);
                         map.put("cartNum",wannaNum);
-                        map.put("cartPic",pic.replace("http://192.168.253.1:8080/Frame2",""));
+                        map.put("cartPic",pic.replace(picUrl,""));
                         Log.e("map",map.toString());
                         return map;
                     }
@@ -156,7 +157,7 @@ public class GoodsDetailActivity extends AppCompatActivity{
                 wannaSizeList.add(wannaSize);
                 wannaGoodsIdList.add(goodsId);
                 wannaGoodsNameList.add(wannaGoodsName);
-                wannaPicList.add(pic);
+                wannaPicList.add(pic.replace(picUrl,""));
                 wannaPriceList.add(wannaPrice);
                 wannaNumList.add(wannaNum);
                 Intent intent = new Intent(GoodsDetailActivity.this,CartActivity.class);

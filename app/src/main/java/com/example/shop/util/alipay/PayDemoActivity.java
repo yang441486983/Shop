@@ -16,10 +16,22 @@ import android.widget.Toast;
 import com.alipay.sdk.app.AuthTask;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.shop.R;
+import com.example.shop.util.SharedPreferenceHelper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.shop.common.UrlAddress.changeToAlreadyPaidUrl;
+import static com.example.shop.common.UrlAddress.deleteMyCartUrl;
 
 /**
  *  重要说明:
@@ -37,8 +49,9 @@ public class PayDemoActivity extends FragmentActivity {
 	public static final String PID = "2088102174810390";
 	/** 支付宝账户登录授权业务：入参target_id值 */
 	public static final String TARGET_ID = "TEST";
-	public String totalPrice,totalNum;
-	public List<String> priceList,numList;
+	public String totalPrice,totalNum,orderId;
+	public List<String> cartIdList;
+	public RequestQueue queue = null;
 
 	/** 商户私钥，pkcs8格式 */
 	/** 如下私钥，RSA2_PRIVATE 或者 RSA_PRIVATE 只需要填入一个 */
@@ -69,9 +82,17 @@ public class PayDemoActivity extends FragmentActivity {
 				if (TextUtils.equals(resultStatus, "9000")) {
 					// 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 					Toast.makeText(PayDemoActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+				if (cartIdList!=null){
+					for(int i = 0;i<cartIdList.size();i++){
+						deleteCart(cartIdList.get(i));
+					}
+				}
+					changeStatus(orderId);
+					finish();
 				} else {
 					// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
 					Toast.makeText(PayDemoActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+					finish();
 				}
 				break;
 			}
@@ -107,18 +128,79 @@ public class PayDemoActivity extends FragmentActivity {
 		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pay_main);
-		Intent intent = new Intent();
+		queue = Volley.newRequestQueue(this);
+		Intent intent = getIntent();
 		totalPrice = intent.getStringExtra("totalPrice");
 		totalNum = intent.getStringExtra("totalNum");
-		Log.e("totalPrice",totalPrice);
+		cartIdList = intent.getStringArrayListExtra("cartId");
+		orderId = intent.getStringExtra("orderId");
+		Log.e("需要改变状态的orderId",orderId);
 		payV2();
 	}
 	
-	/**
-	 * 支付宝支付业务
-	 *
-	 * @param v
-	 */
+//	/**
+//	 * 支付宝支付业务
+//	 *
+//	 * @param v
+//	 */
+	public void changeStatus(final String orderId){
+		StringRequest request = new StringRequest(Request.Method.POST, changeToAlreadyPaidUrl, new Response.Listener<String>() {
+			@Override
+			public void onResponse(String response) {
+
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+
+			}
+		}){
+			//提交参数
+			protected Map<String, String> getParams() throws AuthFailureError {
+				Map<String, String> map = new HashMap<>();
+				map.put("orderId",String.valueOf(orderId));
+				return map;
+			}
+			//写入Cookie
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				Map<String, String> localHashMap = new HashMap<>();
+				String cookie = SharedPreferenceHelper.getCookie(PayDemoActivity.this);
+				localHashMap.put("Cookie", cookie);
+				return localHashMap;
+			}
+		};
+		queue.add(request);
+	}
+	public void deleteCart(final String deleteId){
+		StringRequest request = new StringRequest(Request.Method.POST, deleteMyCartUrl, new Response.Listener<String>() {
+			@Override
+			public void onResponse(String response) {
+
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+
+			}
+		}){
+			//提交参数
+			protected Map<String, String> getParams() throws AuthFailureError {
+				Map<String, String> map = new HashMap<>();
+				map.put("cartId",String.valueOf(deleteId));
+				return map;
+			}
+			//写入Cookie
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				Map<String, String> localHashMap = new HashMap<>();
+				String cookie = SharedPreferenceHelper.getCookie(PayDemoActivity.this);
+				localHashMap.put("Cookie", cookie);
+				return localHashMap;
+			}
+		};
+		queue.add(request);
+	}
 	public void payV2() {
 		if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
 			new AlertDialog.Builder(this).setTitle("警告").setMessage("需要配置APPID | RSA_PRIVATE")
@@ -139,7 +221,7 @@ public class PayDemoActivity extends FragmentActivity {
 		 * orderInfo的获取必须来自服务端；
 		 */
         boolean rsa2 = (RSA2_PRIVATE.length() > 0);
-		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2,"100","1");
+		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, rsa2,totalPrice,totalNum);
 		String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 
 		String privateKey = rsa2 ? RSA2_PRIVATE : RSA_PRIVATE;

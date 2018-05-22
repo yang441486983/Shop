@@ -59,7 +59,7 @@ public class ShoppingFragment extends Fragment {
     RequestQueue queue = null;
     ListView cartList;
     List<String> cartIdList,goodsIdList,cartNameList,cartSizeList,cartColorList,cartPriceList,cartNumList,cartPicList;
-    ArrayList<String> wannaColorList,wannaGoodsIdList,wannaSizeList,wannaNumList,wannaGoodsNameList,wannaPriceList,wannaPicList;
+    ArrayList<String> wannaColorList,wannaGoodsIdList,wannaSizeList,wannaNumList,wannaGoodsNameList,wannaPriceList,wannaPicList,wannaCartIdList;
     ImageLoader imageLoader;
     CartAdapter adapter;
     CheckBox selectAll;
@@ -68,6 +68,7 @@ public class ShoppingFragment extends Fragment {
     Map<Integer,Integer> pickerNumber;
     TextView totalPriceShow;
     Map<Integer,Boolean> selectedMap;
+    int deleteCount=0;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopping, container, false);
 
@@ -96,6 +97,7 @@ public class ShoppingFragment extends Fragment {
                         if (selectedMap.get(i) == true){
                             deleteMyCart(cartIdList.get(i));
                         }
+
                     }
 
 
@@ -117,7 +119,8 @@ public class ShoppingFragment extends Fragment {
                         .putStringArrayListExtra("wannaNum",wannaNumList)
                         .putStringArrayListExtra("wannaGoodsName",wannaGoodsNameList)
                         .putStringArrayListExtra("price",wannaPriceList)
-                        .putStringArrayListExtra("pic",wannaPicList);
+                        .putStringArrayListExtra("pic",wannaPicList)
+                        .putExtra("cartId",wannaCartIdList);
                 startActivity(intent);
             }
         });
@@ -126,6 +129,18 @@ public class ShoppingFragment extends Fragment {
         StringRequest request = new StringRequest(Request.Method.POST, deleteMyCartUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                int count = 0;
+                deleteCount = deleteCount + 1;
+                for (int i = 0;i<selectedMap.size();i++){
+                    if (selectedMap.get(i) == true){
+                        count = count + 1;
+                    }
+                }
+                if (deleteCount == count){
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    mainActivity.reLoadCartFragment();
+                }
+
 
             }
         }, new Response.ErrorListener() {
@@ -152,6 +167,7 @@ public class ShoppingFragment extends Fragment {
         queue.add(request);
     }
     public void PayCart(){
+        wannaCartIdList.clear();
         wannaColorList.clear();
         wannaGoodsIdList.clear();
         wannaSizeList.clear();
@@ -161,12 +177,13 @@ public class ShoppingFragment extends Fragment {
         wannaPriceList.clear();
         for (int i = 0;i<selectedMap.size();i++){
             if (selectedMap.get(i)==true){
+                wannaCartIdList.add(cartIdList.get(i));
                 wannaPicList.add(cartPicList.get(i));
                 wannaSizeList.add(cartSizeList.get(i));
                 wannaPriceList.add(cartPriceList.get(i));
                 wannaNumList.add(cartNumList.get(i));
                 wannaGoodsNameList.add(cartNameList.get(i));
-                wannaGoodsIdList.add(cartIdList.get(i));
+                wannaGoodsIdList.add(goodsIdList.get(i));
                 wannaColorList.add(cartColorList.get(i));
             }
         }
@@ -197,6 +214,7 @@ public class ShoppingFragment extends Fragment {
 
     }
     public void init(){
+        wannaCartIdList = new ArrayList<>();
         wannaColorList = new ArrayList<>();
         wannaGoodsIdList = new ArrayList<>();
         wannaGoodsNameList = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.example.shop.Fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.shop.GoodsDetailActivity;
 import com.example.shop.R;
 import com.example.shop.util.BitmapCache;
 import com.example.shop.util.SharedPreferenceHelper;
@@ -69,11 +72,22 @@ public class TabFragment extends Fragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        itemListener();
         //getGoodsByCate();
     }
     public TabFragment(){
 
+    }
+    public void itemListener(){
+        kindList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+                intent.putExtra("goodsId",idList.get(i));
+                intent.putExtra("pic",picList.get(i));
+                startActivity(intent);
+            }
+        });
     }
     private void initView(View view){
 

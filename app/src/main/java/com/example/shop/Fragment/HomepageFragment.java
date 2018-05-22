@@ -33,6 +33,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.shop.GoodsDetailActivity;
+import com.example.shop.MainActivity;
 import com.example.shop.R;
 
 import com.example.shop.SearchActivity;
@@ -139,11 +140,6 @@ public class HomepageFragment extends Fragment{
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
 
-    }
-    public void addHeader(){
-        AbsListView.LayoutParams lp = new ListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        adverScrollView.setLayoutParams(lp);
-        lv_newGoods.addHeaderView(adverScrollView);
     }
 
     public void itemListener(){

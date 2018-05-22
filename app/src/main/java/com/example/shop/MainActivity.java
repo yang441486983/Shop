@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                     shoppingFragment = new ShoppingFragment();
                     fragmentTransaction.add(R.id.fragmentshow,shoppingFragment);
                 }else {
+                    reLoadCartFragment();
                     fragmentTransaction.show(shoppingFragment);
                 }
                 break;
@@ -131,5 +132,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     }
 
+    public void reLoadCartFragment(){
+        getSupportFragmentManager().beginTransaction().remove(shoppingFragment).commit();
+        shoppingFragment = new ShoppingFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragmentshow,shoppingFragment).commit();
+    }
 
 }

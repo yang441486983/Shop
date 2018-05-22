@@ -51,7 +51,7 @@ import static com.example.shop.common.UrlAddress.picUrl;
 
 public class CartActivity extends AppCompatActivity {
     List addrIdList,userIdList,addrProvinceList,addrCityList,addrAreaList,addrContentList,addrReceiverList,addrTleList,addrIsDefaultList;
-    ArrayList<String> wannaColorList,wannaGoodsIdList,wannaSizeList,wannaNumList,wannaGoodsNameList,wannaPicList,wannaPriceList;
+    ArrayList<String> wannaColorList,wannaGoodsIdList,wannaSizeList,wannaNumList,wannaGoodsNameList,wannaPicList,wannaPriceList,wannaCartIdList;
     RequestQueue queue = null;
     RadioGroup addressRg;
     RadioButton radioButton;
@@ -84,8 +84,9 @@ public class CartActivity extends AppCompatActivity {
         wannaGoodsNameList = intent.getStringArrayListExtra("wannaGoodsName");
         wannaPicList = intent.getStringArrayListExtra("pic");
         wannaPriceList = intent.getStringArrayListExtra("price");
-        Log.e("wannaColor",wannaColorList.toString());
-            getAddress();
+        wannaCartIdList = intent.getStringArrayListExtra("cartId");
+        Log.e("wannaPicList谔谔谔谔",wannaPicList.toString());
+        getAddress();
 
         Show();
     }
@@ -104,7 +105,17 @@ public class CartActivity extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.POST, addOrderUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
+                Log.e("订单号",response);
+                String orderId = response;
+                Log.e("totalPrice",String.valueOf(totalPrice));
+                Intent intent = new Intent(CartActivity.this, PayDemoActivity.class);
+                intent.putExtra("totalPrice",String.valueOf(totalPrice))
+                        .putExtra("totalNum",String.valueOf(totalNum))
+                        .putExtra("orderId",orderId);
+                intent.putStringArrayListExtra("cartId",wannaCartIdList);
+                Log.e("需要支付",String.valueOf(totalPrice));
+                startActivity(intent);
+                Log.e("show",postalfeeList.toString());
             }
         }, new Response.ErrorListener() {
             @Override
@@ -169,12 +180,7 @@ public class CartActivity extends AppCompatActivity {
                 String commitPic = gson.toJson(wannaPicList);
                 String commitPrice = gson.toJson(wannaPriceList);
                 addOrder(address,String.valueOf(totalPostPrice),commitGoodsId,commitGoodsName,commitPrice,commitSize,commitColor,commitNum,commitPic);
-                Log.e("totalPrice",String.valueOf(totalPrice));
-                Intent intent = new Intent(CartActivity.this, PayDemoActivity.class);
-                intent.putExtra("totalPrice",String.valueOf(totalPrice))
-                        .putExtra("totalNum",String.valueOf(totalNum));
-                startActivity(intent);
-                Log.e("show",postalfeeList.toString());
+
 
             }
         });
@@ -229,6 +235,7 @@ public class CartActivity extends AppCompatActivity {
         addressRg = (RadioGroup)findViewById(R.id.addressGroup);
         wannaPriceList = new ArrayList<>();
         wannaPicList = new ArrayList<>();
+        wannaCartIdList = new ArrayList<>();
         wannaGoodsNameList = new ArrayList<>();
         wannaNumList = new ArrayList<>();
         wannaSizeList = new ArrayList<>();
